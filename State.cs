@@ -15,6 +15,8 @@ namespace Markov
 
         private Vector transitionVector { get; set; }
 
+        private Vector cSum { get; set; }
+
         private static Random rand = new Random();
 
         public State(String name, Vector transition)
@@ -41,14 +43,36 @@ namespace Markov
             {
                 transitionVector[i] /= sum;
             }
+
+            //Cumulative sum for finding weights
+            Double cumulativeSum = 0.0;
+            for (int i = 0; i < transitionVector.Size; i++)
+            {
+                cumulativeSum += transitionVector[i]*100;
+                cSum.Append(cumulativeSum);
+            }
         }
 
+        /// <summary>
+        /// Find the next state by weighted random.
+        /// </summary>
+        /// <returns></returns>
         public int Transistion()
         {
             Double r = rand.Next();
+            int lowGuess = 0;
+            int highGuess = transitionVector.Size - 1;
 
-
-
+            int guess = 0;
+            while (highGuess > lowGuess)
+            {
+                guess = (lowGuess + highGuess) / 2;
+                if (cSum[guess] < r)
+                    lowGuess = guess + 1;
+                else if (cSum[guess] - transitionVector[guess] > r)
+                    highGuess = guess - 1;
+            }
+            return guess;
         }
 
         public String ToString()
