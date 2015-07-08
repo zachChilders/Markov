@@ -33,8 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sharpe">
-      <HintPath>..\..\Sharpe\Sharpe\bin\Release\Sharpe.dll</HintPath>
+    <Reference Include="Sharpe, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Sharpe\Sharpe\bin\Debug\Sharpe.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

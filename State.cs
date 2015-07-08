@@ -15,7 +15,7 @@ namespace Markov
 
         private Vector transitionVector { get; set; }
 
-        private Vector cSum { get; set; }
+        private Vector cSum = new Vector(1);
 
         private static Random rand = new Random();
 
@@ -38,12 +38,14 @@ namespace Markov
         public void AddTransition(Double newWeight)
         {
             transitionVector.Append(newWeight);
-            Double sum = transitionVector.sum();
+            Double sum = transitionVector.Sum();
             for (int i = 0; i < transitionVector.Size; i++)
             {
-                transitionVector[i] /= sum;
+                if (sum > 1.0)
+                    transitionVector[i] = transitionVector[i] / sum;
             }
 
+            cSum = new Vector(0);
             //Cumulative sum for finding weights
             Double cumulativeSum = 0.0;
             for (int i = 0; i < transitionVector.Size; i++)
@@ -59,20 +61,13 @@ namespace Markov
         /// <returns></returns>
         public int Transistion()
         {
-            Double r = rand.Next();
-            int lowGuess = 0;
-            int highGuess = transitionVector.Size - 1;
-
-            int guess = 0;
-            while (highGuess > lowGuess)
+            Double r = rand.NextDouble() * 100;
+            for (int i = 0; i < cSum.Size; i++)
             {
-                guess = (lowGuess + highGuess) / 2;
-                if (cSum[guess] < r)
-                    lowGuess = guess + 1;
-                else if (cSum[guess] - transitionVector[guess] > r)
-                    highGuess = guess - 1;
+                if (cSum[i] > r)
+                    return i;
             }
-            return guess;
+            return 0;
         }
 
         public String ToString()
@@ -80,7 +75,7 @@ namespace Markov
             StringBuilder sb = new StringBuilder();
             sb.Append(stateName);
             sb.Append("\n");
-            sb.Append(transitionVector.ToString());
+            //sb.Append(transitionVector.ToString());
             return sb.ToString();
         }
     }

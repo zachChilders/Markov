@@ -24,8 +24,8 @@ namespace Markov
             //We're entering weights manually
             if (AutoWeight == false)
             {
-                //Check to make sure we have proper amount of weights for this chain
-                if (weights.Size != chain.Count)
+                ////Check to make sure we have proper amount of weights for this chain
+                if (weights.Size != chain.Count + 1)
                 {
                     throw new Exception("Wrong number of transition weights when adding a new state.");
                 }
@@ -37,14 +37,17 @@ namespace Markov
             }
 
             chain.Add(NewState);
+            CurrentState = NewState;
         }
 
         /// <summary>
         /// Transistions the chain to the next available state.
         /// </summary>
-        public void Next()
+        public State Next()
         {
             CurrentState = chain[CurrentState.Transistion()];
+
+            return CurrentState;
         }
 
         public String ToString()
